@@ -3,13 +3,14 @@ import { Heart, Menu, X, MessageCircle, LogOut, User as UserIcon, LayoutDashboar
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 
-const nav = [
+type NavItem = { to: string; label: string; auth?: boolean };
+const nav: readonly NavItem[] = [
   { to: "/", label: "హోమ్" },
   { to: "/browse", label: "ప్రొఫైల్స్" },
   { to: "/dashboard", label: "డాష్‌బోర్డ్", auth: true },
   { to: "/messages", label: "సందేశాలు", auth: true },
   { to: "/about", label: "మా గురించి" },
-] as const;
+];
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -43,7 +44,7 @@ export function Header() {
           {visible.map((n) => {
             const active = path === n.to;
             return (
-              <Link key={n.to} to={n.to} className={`px-4 py-2 rounded-md text-sm font-medium transition-colors font-telugu ${active ? "text-primary bg-secondary" : "text-foreground/75 hover:text-primary hover:bg-secondary/60"}`}>{n.label}</Link>
+              <Link key={n.to} to={n.to as any} className={`px-4 py-2 rounded-md text-sm font-medium transition-colors font-telugu ${active ? "text-primary bg-secondary" : "text-foreground/75 hover:text-primary hover:bg-secondary/60"}`}>{n.label}</Link>
             );
           })}
         </nav>
