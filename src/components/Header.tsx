@@ -44,7 +44,7 @@ export function Header() {
           {visible.map((n) => {
             const active = path === n.to;
             return (
-              <Link key={n.to} to={n.to} className={`px-4 py-2 rounded-md text-sm font-medium transition-colors font-telugu ${active ? "text-primary bg-secondary" : "text-foreground/75 hover:text-primary hover:bg-secondary/60"}`}>{n.label}</Link>
+              <Link key={n.to} to={n.to as any} className={`px-4 py-2 rounded-md text-sm font-medium transition-colors font-telugu ${active ? "text-primary bg-secondary" : "text-foreground/75 hover:text-primary hover:bg-secondary/60"}`}>{n.label}</Link>
             );
           })}
         </nav>
