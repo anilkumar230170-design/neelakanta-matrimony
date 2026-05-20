@@ -41,8 +41,8 @@ export function Footer() {
         <div>
           <h4 className="font-semibold mb-3 text-gold font-telugu">సంప్రదించండి</h4>
           <ul className="space-y-2 text-sm text-primary-foreground/80">
-            <li className="flex items-center gap-2"><Phone className="h-4 w-4" /> +91 98765 43210</li>
-            <li className="flex items-center gap-2"><Mail className="h-4 w-4" /> care@neelakanta.com</li>
+            <li className="flex items-center gap-2"><Phone className="h-4 w-4" /><span>+91 98765 43210</span></li>
+            <li className="flex items-center gap-2"><Mail className="h-4 w-4" /><span>care@neelakanta.com</span></li>
           </ul>
           <div className="flex gap-3 mt-4">
             <a className="h-9 w-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-gold hover:text-primary transition-colors" href="#"><Facebook className="h-4 w-4" /></a>
