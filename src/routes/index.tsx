@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search, Shield, Heart, Sparkles, Star, Users, CheckCircle2, ArrowRight, Award } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import heroImg from "@/assets/hero-couple.jpg";
 import mandala from "@/assets/pattern-mandala.jpg";
-import { profiles, stats, successStories } from "@/lib/mock-data";
+import { stats, successStories } from "@/lib/mock-data";
 import { ProfileCard } from "@/components/ProfileCard";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,6 +18,13 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const { data: featured = [] } = useQuery({
+    queryKey: ["featured-profiles"],
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("*").eq("profile_complete", true).order("last_seen", { ascending: false }).limit(4);
+      return data ?? [];
+    },
+  });
   return (
     <div>
       {/* HERO */}
@@ -120,7 +129,9 @@ function Home() {
             </Link>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {profiles.slice(0, 4).map((p) => <ProfileCard key={p.id} p={p} />)}
+            {featured.length === 0 ? (
+              <div className="col-span-full text-center py-12 text-muted-foreground font-telugu">త్వరలో కొత్త ప్రొఫైల్స్ వస్తాయి. <Link to="/register" className="text-primary hover:underline">మొదట మీరే నమోదు అవ్వండి</Link></div>
+            ) : featured.map((p) => <ProfileCard key={p.id} p={p} />)}
           </div>
         </div>
       </section>
