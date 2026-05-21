@@ -1,46 +1,130 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { BadgeCheck, Crown, MapPin, GraduationCap, Briefcase, Heart, MessageCircle, Star, Share2, ArrowLeft, Phone } from "lucide-react";
-import { profiles } from "@/lib/mock-data";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { BadgeCheck, Crown, MapPin, GraduationCap, Briefcase, Heart, MessageCircle, Star, Share2, ArrowLeft, Sparkles, Loader2 } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth";
+import { toast } from "sonner";
+import { CASTES_TELUGU } from "@/lib/constants";
+import { NAKSHATRAS_TELUGU, RASIS_TELUGU, calculateSimpleMatch, calculateAshtakoot } from "@/lib/horoscope";
+import { ageFromDob, colorFor, heightLabel, initialsTelugu, shortId } from "@/lib/profile-utils";
 
 export const Route = createFileRoute("/profile/$id")({
-  head: ({ params }) => {
-    const p = profiles.find(x => x.id === params.id);
-    return {
-      meta: [
-        { title: p ? `${p.nameTelugu} — Neelakanta Matrimony` : "Profile" },
-        { name: "description", content: p?.about ?? "" },
-      ],
-    };
-  },
-  loader: ({ params }) => {
-    const p = profiles.find(x => x.id === params.id);
-    if (!p) throw notFound();
-    return p;
-  },
+  head: ({ params }) => ({
+    meta: [
+      { title: `ప్రొఫైల్ ${shortId(params.id)} — Neelakanta Matrimony` },
+    ],
+  }),
   component: ProfilePage,
-  notFoundComponent: () => (
-    <div className="mx-auto max-w-2xl text-center py-24 px-6">
-      <h1 className="font-display text-3xl text-primary font-telugu">ప్రొఫైల్ కనుగొనబడలేదు</h1>
-      <Link to="/browse" className="btn-royal inline-block mt-6 px-6 py-3 rounded-full font-telugu">ప్రొఫైల్స్‌కి తిరిగి వెళ్ళండి</Link>
-    </div>
-  ),
 });
 
 function ProfilePage() {
-  const p = Route.useLoaderData();
+  const { id } = Route.useParams();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const qc = useQueryClient();
+
+  const { data: p, isLoading } = useQuery({
+    queryKey: ["profile", id],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("profiles").select("*").eq("id", id).maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const { data: me } = useQuery({
+    queryKey: ["profile", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("*").eq("id", user!.id).maybeSingle();
+      return data;
+    },
+  });
+
+  const { data: shortlisted } = useQuery({
+    queryKey: ["shortlist", user?.id, id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase.from("shortlists").select("id").eq("user_id", user!.id).eq("profile_id", id).maybeSingle();
+      return !!data;
+    },
+  });
+
+  // Log view
+  useEffect(() => {
+    if (user && p && user.id !== p.id) {
+      supabase.from("profile_views").insert({ viewer_id: user.id, profile_id: p.id }).then(() => {});
+    }
+  }, [user, p]);
+
+  const [busy, setBusy] = useState(false);
+
+  if (isLoading) return <div className="py-24 text-center"><Loader2 className="h-8 w-8 text-gold animate-spin mx-auto" /></div>;
+  if (!p) return (
+    <div className="mx-auto max-w-2xl text-center py-24 px-6">
+      <h1 className="font-display text-3xl text-primary font-telugu">ప్రొఫైల్ కనుగొనబడలేదు</h1>
+      <Link to="/browse" className="btn-royal inline-block mt-6 px-6 py-3 rounded-full font-telugu">తిరిగి వెళ్ళండి</Link>
+    </div>
+  );
+
+  const age = ageFromDob(p.date_of_birth);
+  const color = colorFor(p.id);
+  const isSelf = user?.id === p.id;
+  const premium = p.plan && p.plan !== "free";
+
+  const simpleMatch = me ? calculateSimpleMatch(
+    { rasi: me.rasi, nakshatra: me.nakshatra, manglik: me.manglik },
+    { rasi: p.rasi, nakshatra: p.nakshatra, manglik: p.manglik }
+  ) : null;
+
+  const fullMatch = me && me.rasi && me.nakshatra && p.rasi && p.nakshatra
+    ? calculateAshtakoot({ rasi: me.rasi, nakshatra: me.nakshatra }, { rasi: p.rasi, nakshatra: p.nakshatra })
+    : null;
+
+  const sendInterest = async () => {
+    if (!user) { navigate({ to: "/login" }); return; }
+    setBusy(true);
+    const { error } = await supabase.from("interests").insert({ sender_id: user.id, receiver_id: p.id });
+    setBusy(false);
+    if (error) {
+      if (error.code === "23505") toast.info("ఇప్పటికే పంపబడింది");
+      else toast.error(error.message);
+      return;
+    }
+    toast.success("ఆసక్తి పంపబడింది");
+  };
+
+  const toggleShortlist = async () => {
+    if (!user) { navigate({ to: "/login" }); return; }
+    if (shortlisted) {
+      await supabase.from("shortlists").delete().eq("user_id", user.id).eq("profile_id", p.id);
+      toast.success("షార్ట్‌లిస్ట్ నుండి తీసివేయబడింది");
+    } else {
+      await supabase.from("shortlists").insert({ user_id: user.id, profile_id: p.id });
+      toast.success("షార్ట్‌లిస్ట్‌కి జోడించబడింది ⭐");
+    }
+    qc.invalidateQueries({ queryKey: ["shortlist", user.id, p.id] });
+  };
+
+  const startChat = () => {
+    if (!user) { navigate({ to: "/login" }); return; }
+    navigate({ to: "/messages/$id", params: { id: p.id } });
+  };
 
   const details: [string, string, string][] = [
-    ["వయస్సు", `${p.age} సంవత్సరాలు`, "Age"],
-    ["ఎత్తు", p.height, "Height"],
-    ["కులం", p.caste, "Caste"],
-    ["గోత్రం", p.gotra, "Gotra"],
-    ["రాశి", p.rasi, "Rasi"],
-    ["నక్షత్రం", p.nakshatra, "Nakshatra"],
+    ["వయస్సు", age ? `${age} సంవత్సరాలు` : "—", "Age"],
+    ["ఎత్తు", heightLabel(p.height_cm), "Height"],
+    ["కులం", p.caste ? (CASTES_TELUGU[p.caste] ?? p.caste) : "—", "Caste"],
+    ["ఉప కులం", p.sub_caste ?? "—", "Sub-caste"],
+    ["గోత్రం", p.gotra ?? "—", "Gotra"],
+    ["రాశి", p.rasi ? (RASIS_TELUGU[p.rasi] ?? p.rasi) : "—", "Rasi"],
+    ["నక్షత్రం", p.nakshatra ? (NAKSHATRAS_TELUGU[p.nakshatra] ?? p.nakshatra) : "—", "Nakshatra"],
     ["మాంగల్యం", p.manglik ? "అవును" : "కాదు", "Manglik"],
-    ["చదువు", p.education, "Education"],
-    ["వృత్తి", p.profession, "Profession"],
-    ["ఆదాయం", p.income, "Income"],
-    ["నివాసం", p.locationTelugu, "Location"],
+    ["చదువు", p.education ?? "—", "Education"],
+    ["వృత్తి", p.profession ?? "—", "Profession"],
+    ["ఆదాయం", p.annual_income ?? "—", "Income"],
+    ["నివాసం", [p.city, p.state].filter(Boolean).join(", ") || "—", "Location"],
   ];
 
   return (
@@ -50,58 +134,81 @@ function ProfilePage() {
       </Link>
 
       <div className="grid lg:grid-cols-[1fr_2fr] gap-8">
-        {/* Left */}
         <div className="space-y-5">
           <div className="royal-card overflow-hidden">
-            <div className={`relative h-72 bg-gradient-to-br ${p.color} flex items-center justify-center`}>
-              <span className="font-display text-9xl text-white/95 drop-shadow-lg">{p.initials}</span>
-              {p.premium && (
-                <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-gold text-gold-foreground px-3 py-1 rounded-full text-xs font-bold">
+            <div className={`relative h-72 bg-gradient-to-br ${color} flex items-center justify-center`}>
+              {p.photo_url ? (
+                <img src={p.photo_url} alt={p.full_name} className="absolute inset-0 h-full w-full object-cover" />
+              ) : (
+                <span className="font-display text-9xl text-white/95 drop-shadow-lg font-telugu">{initialsTelugu(p.full_name_telugu ?? p.full_name)}</span>
+              )}
+              {premium && (
+                <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-gold text-gold-foreground px-3 py-1 rounded-full text-xs font-bold z-10">
                   <Crown className="h-3.5 w-3.5" /> PREMIUM
                 </div>
               )}
             </div>
             <div className="p-6 text-center">
               <div className="flex items-center justify-center gap-2">
-                <h1 className="font-display text-2xl font-bold text-primary font-telugu">{p.nameTelugu}</h1>
+                <h1 className="font-display text-2xl font-bold text-primary font-telugu">{p.full_name_telugu ?? p.full_name}</h1>
                 {p.verified && <BadgeCheck className="h-5 w-5 text-primary" />}
               </div>
-              <p className="text-sm text-muted-foreground">{p.name}</p>
-              <p className="text-xs text-gold font-mono mt-1">ID: {p.id}</p>
+              <p className="text-sm text-muted-foreground">{p.full_name}</p>
+              <p className="text-xs text-gold font-mono mt-1">ID: {shortId(p.id)}</p>
 
               <div className="divider-gold my-4" />
 
-              <div className="space-y-2.5">
-                <button className="btn-royal w-full py-3 rounded-full font-semibold flex items-center justify-center gap-2 font-telugu">
-                  <Heart className="h-4 w-4 fill-current" /> ఆసక్తి పంపండి
-                </button>
-                <button className="btn-gold w-full py-3 rounded-full font-semibold flex items-center justify-center gap-2 font-telugu">
-                  <MessageCircle className="h-4 w-4" /> సందేశం పంపండి
-                </button>
-                <div className="grid grid-cols-2 gap-2">
-                  <button className="py-2.5 rounded-full border border-border text-sm font-semibold flex items-center justify-center gap-1.5 hover:bg-secondary font-telugu">
-                    <Star className="h-4 w-4" /> షార్ట్‌లిస్ట్
+              {!isSelf && (
+                <div className="space-y-2.5">
+                  <button onClick={sendInterest} disabled={busy} className="btn-royal w-full py-3 rounded-full font-semibold flex items-center justify-center gap-2 font-telugu disabled:opacity-60">
+                    <Heart className="h-4 w-4 fill-current" /> ఆసక్తి పంపండి
                   </button>
-                  <button className="py-2.5 rounded-full border border-border text-sm font-semibold flex items-center justify-center gap-1.5 hover:bg-secondary font-telugu">
-                    <Share2 className="h-4 w-4" /> షేర్
+                  <button onClick={startChat} className="btn-gold w-full py-3 rounded-full font-semibold flex items-center justify-center gap-2 font-telugu">
+                    <MessageCircle className="h-4 w-4" /> సందేశం పంపండి
                   </button>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button onClick={toggleShortlist} className={`py-2.5 rounded-full border text-sm font-semibold flex items-center justify-center gap-1.5 font-telugu transition-colors ${shortlisted ? "bg-gold/20 border-gold text-primary" : "border-border hover:bg-secondary"}`}>
+                      <Star className={`h-4 w-4 ${shortlisted ? "fill-gold text-gold" : ""}`} /> {shortlisted ? "షార్ట్‌లిస్టెడ్" : "షార్ట్‌లిస్ట్"}
+                    </button>
+                    <button onClick={() => { navigator.clipboard.writeText(window.location.href); toast.success("లింక్ కాపీ అయింది"); }} className="py-2.5 rounded-full border border-border text-sm font-semibold flex items-center justify-center gap-1.5 hover:bg-secondary font-telugu">
+                      <Share2 className="h-4 w-4" /> షేర్
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
-          <div className="royal-card p-5">
-            <h3 className="font-display font-bold text-primary font-telugu flex items-center gap-2"><Phone className="h-4 w-4" /> సంప్రదింపు</h3>
-            <p className="text-sm text-muted-foreground mt-2 font-telugu">ప్రీమియం సభ్యులు మాత్రమే నేరుగా సంప్రదించగలరు.</p>
-            <button className="btn-royal w-full mt-3 py-2.5 rounded-full text-sm font-semibold font-telugu">ప్రీమియం అప్‌గ్రేడ్</button>
-          </div>
+          {simpleMatch && !isSelf && (
+            <div className="royal-card p-5">
+              <h3 className="font-display font-bold text-primary font-telugu flex items-center gap-2"><Sparkles className="h-4 w-4 text-gold" /> జాతక మ్యాచ్</h3>
+              <div className="mt-3 flex items-baseline gap-2">
+                <span className="font-display text-4xl font-bold text-gold">{simpleMatch.score}</span>
+                <span className="text-sm text-muted-foreground">/ 100</span>
+              </div>
+              <div className="h-2 mt-2 rounded-full bg-secondary overflow-hidden">
+                <div className="h-full" style={{ width: `${simpleMatch.score}%`, background: "var(--gradient-gold)" }} />
+              </div>
+              <ul className="mt-3 space-y-1 text-xs font-telugu text-muted-foreground">
+                {simpleMatch.notes.map((n, i) => <li key={i}>• {n}</li>)}
+              </ul>
+              {fullMatch && (
+                <div className="mt-4 pt-4 border-t border-border">
+                  <div className="text-xs font-semibold font-telugu">అష్టకూట (36 గుణాలు)</div>
+                  <div className="font-display text-2xl font-bold text-primary mt-1">{fullMatch.total} / 36 <span className="text-sm font-normal text-gold font-telugu">— {fullMatch.verdict}</span></div>
+                  <Link to="/horoscope" search={{ a: user!.id, b: p.id }} className="text-xs text-primary hover:underline font-telugu mt-2 inline-block">పూర్తి వివరాలు →</Link>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* Right */}
         <div className="space-y-5">
-          <Card title="నా గురించి" titleEn="About me">
-            <p className="text-foreground/85 leading-relaxed font-telugu">{p.about}</p>
-          </Card>
+          {p.about && (
+            <Card title="నా గురించి" titleEn="About me">
+              <p className="text-foreground/85 leading-relaxed font-telugu">{p.about}</p>
+            </Card>
+          )}
 
           <Card title="వ్యక్తిగత వివరాలు" titleEn="Personal Details">
             <div className="grid sm:grid-cols-2 gap-x-6 gap-y-3">
@@ -117,23 +224,14 @@ function ProfilePage() {
             </div>
           </Card>
 
-          <Card title="భాగస్వామి ప్రాధాన్యతలు" titleEn="Partner Preferences">
-            <div className="grid sm:grid-cols-2 gap-4 text-sm">
-              <Pref icon={<Heart className="h-4 w-4" />} k="వయస్సు" v="25 - 32 సంవత్సరాలు" />
-              <Pref icon={<MapPin className="h-4 w-4" />} k="ప్రాంతం" v="ఆంధ్ర, తెలంగాణ, NRI" />
-              <Pref icon={<GraduationCap className="h-4 w-4" />} k="చదువు" v="గ్రాడ్యుయేషన్ లేదా అంతకంటే ఎక్కువ" />
-              <Pref icon={<Briefcase className="h-4 w-4" />} k="వృత్తి" v="ఏ ఉద్యోగమైనా" />
-            </div>
-          </Card>
-
           <Card title="కుటుంబ వివరాలు" titleEn="Family">
             <div className="grid sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
-              <Detail k="తండ్రి" v="రిటైర్డ్ ఉద్యోగి" />
-              <Detail k="తల్లి" v="గృహిణి" />
-              <Detail k="సోదరులు" v="1 (వివాహితుడు)" />
-              <Detail k="సోదరిలు" v="ఏదీ లేదు" />
-              <Detail k="కుటుంబ విలువలు" v="సంప్రదాయ" />
-              <Detail k="కుటుంబ స్థితి" v="మధ్యతరగతి" />
+              <Detail k="తండ్రి" v={p.father_name ?? "—"} />
+              <Detail k="తల్లి" v={p.mother_name ?? "—"} />
+              <Detail k="సోదరులు/సోదరిలు" v={p.siblings ?? "—"} />
+              <Detail k="కుటుంబ విలువలు" v={p.family_status ?? "—"} />
+              <Detail k="కుటుంబ రకం" v={p.family_type ?? "—"} />
+              <Detail k="మాతృభాష" v={p.mother_tongue ?? "Telugu"} />
             </div>
           </Card>
         </div>
@@ -159,19 +257,7 @@ function Detail({ k, v }: { k: string; v: string }) {
   return (
     <div className="flex justify-between border-b border-border/60 pb-2 font-telugu">
       <span className="text-muted-foreground">{k}</span>
-      <span className="font-semibold text-foreground">{v}</span>
-    </div>
-  );
-}
-
-function Pref({ icon, k, v }: { icon: React.ReactNode; k: string; v: string }) {
-  return (
-    <div className="flex items-start gap-3 p-3 rounded-lg bg-secondary/50">
-      <div className="text-gold mt-0.5">{icon}</div>
-      <div>
-        <div className="text-xs text-muted-foreground font-telugu">{k}</div>
-        <div className="font-semibold font-telugu">{v}</div>
-      </div>
+      <span className="font-semibold text-foreground text-right">{v}</span>
     </div>
   );
 }
