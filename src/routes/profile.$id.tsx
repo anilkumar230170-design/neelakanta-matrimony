@@ -258,3 +258,10 @@ function Detail({ k, v }: { k: string; v: string }) {
     </div>
   );
 }
+
+function PhotoFrame({ value, fallback, alt }: { value?: string | null; fallback: string; alt: string }) {
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => { resolvePhotoUrl(value).then(setUrl); }, [value]);
+  if (url) return <img src={url} alt={alt} className="absolute inset-0 h-full w-full object-cover" />;
+  return <span className="font-display text-9xl text-white/95 drop-shadow-lg font-telugu">{fallback}</span>;
+}
