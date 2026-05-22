@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { CASTES_TELUGU } from "@/lib/constants";
 import { NAKSHATRAS_TELUGU, RASIS_TELUGU, calculateSimpleMatch, calculateAshtakoot } from "@/lib/horoscope";
 import { ageFromDob, colorFor, heightLabel, initialsTelugu, shortId } from "@/lib/profile-utils";
+import { resolvePhotoUrl } from "@/lib/photo";
 
 export const Route = createFileRoute("/profile/$id")({
   head: ({ params }) => ({
@@ -137,11 +138,7 @@ function ProfilePage() {
         <div className="space-y-5">
           <div className="royal-card overflow-hidden">
             <div className={`relative h-72 bg-gradient-to-br ${color} flex items-center justify-center`}>
-              {p.photo_url ? (
-                <img src={p.photo_url} alt={p.full_name} className="absolute inset-0 h-full w-full object-cover" />
-              ) : (
-                <span className="font-display text-9xl text-white/95 drop-shadow-lg font-telugu">{initialsTelugu(p.full_name_telugu ?? p.full_name)}</span>
-              )}
+              <PhotoFrame value={p.photo_url} fallback={initialsTelugu(p.full_name_telugu ?? p.full_name)} alt={p.full_name} />
               {premium && (
                 <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-gold text-gold-foreground px-3 py-1 rounded-full text-xs font-bold z-10">
                   <Crown className="h-3.5 w-3.5" /> PREMIUM
