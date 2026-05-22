@@ -19,9 +19,6 @@ function Dashboard() {
   const navigate = useNavigate();
   const qc = useQueryClient();
 
-  useEffect(() => {
-    if (!authLoading && !user) navigate({ to: "/login", search: { redirect: "/dashboard" } });
-  }, [user, authLoading, navigate]);
 
   const { data: me } = useQuery({
     queryKey: ["me", user?.id],

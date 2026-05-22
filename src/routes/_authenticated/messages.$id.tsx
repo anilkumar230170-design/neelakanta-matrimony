@@ -12,13 +12,10 @@ export const Route = createFileRoute("/_authenticated/messages/$id")({
 
 function Thread() {
   const { id: partnerId } = Route.useParams();
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const qc = useQueryClient();
   const [text, setText] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => { if (!loading && !user) navigate({ to: "/login", search: { redirect: `/messages/${partnerId}` } }); }, [user, loading, navigate, partnerId]);
 
   const { data: partner } = useQuery({
     queryKey: ["profile", partnerId],
