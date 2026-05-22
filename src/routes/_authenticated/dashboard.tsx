@@ -1,13 +1,12 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Eye, Heart, Send, Star, TrendingUp, Bell, Crown, BadgeCheck, ArrowUpRight, Sparkles, Calendar, MessageCircle, Loader2, Check, X } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { ProfileCard } from "@/components/ProfileCard";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/dashboard")({
+export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [{ title: "డాష్‌బోర్డ్ — Neelakanta Matrimony" }],
   }),
@@ -16,12 +15,9 @@ export const Route = createFileRoute("/dashboard")({
 
 function Dashboard() {
   const { user, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
+  
   const qc = useQueryClient();
 
-  useEffect(() => {
-    if (!authLoading && !user) navigate({ to: "/login", search: { redirect: "/dashboard" } });
-  }, [user, authLoading, navigate]);
 
   const { data: me } = useQuery({
     queryKey: ["me", user?.id],

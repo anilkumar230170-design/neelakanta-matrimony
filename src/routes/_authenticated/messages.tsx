@@ -1,19 +1,16 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { MessageCircle, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 
-export const Route = createFileRoute("/messages")({
+export const Route = createFileRoute("/_authenticated/messages")({
   head: () => ({ meta: [{ title: "సందేశాలు — Neelakanta Matrimony" }] }),
   component: Messages,
 });
 
 function Messages() {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
-  useEffect(() => { if (!loading && !user) navigate({ to: "/login", search: { redirect: "/messages" } }); }, [user, loading, navigate]);
+  const { user } = useAuth();
 
   const { data: conversations = [], isLoading } = useQuery({
     queryKey: ["conversations", user?.id],
@@ -36,7 +33,7 @@ function Messages() {
     },
   });
 
-  if (loading || !user) return <div className="py-24 text-center"><Loader2 className="h-8 w-8 text-gold animate-spin mx-auto" /></div>;
+  if (!user) return <div className="py-24 text-center"><Loader2 className="h-8 w-8 text-gold animate-spin mx-auto" /></div>;
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">

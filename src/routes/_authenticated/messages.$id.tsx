@@ -6,19 +6,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/messages/$id")({
+export const Route = createFileRoute("/_authenticated/messages/$id")({
   component: Thread,
 });
 
 function Thread() {
   const { id: partnerId } = Route.useParams();
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const qc = useQueryClient();
   const [text, setText] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => { if (!loading && !user) navigate({ to: "/login", search: { redirect: `/messages/${partnerId}` } }); }, [user, loading, navigate, partnerId]);
 
   const { data: partner } = useQuery({
     queryKey: ["profile", partnerId],
@@ -73,7 +70,7 @@ function Thread() {
     qc.invalidateQueries({ queryKey: ["thread", user.id, partnerId] });
   };
 
-  if (loading || !user) return <div className="py-24 text-center"><Loader2 className="h-8 w-8 text-gold animate-spin mx-auto" /></div>;
+  if (!user) return <div className="py-24 text-center"><Loader2 className="h-8 w-8 text-gold animate-spin mx-auto" /></div>;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 flex flex-col h-[calc(100vh-8rem)]">

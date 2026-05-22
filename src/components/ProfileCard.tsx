@@ -6,11 +6,14 @@ import { CASTES_TELUGU } from "@/lib/constants";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { resolvePhotoUrl } from "@/lib/photo";
 
 export function ProfileCard({ p }: { p: DbProfile }) {
   const { user } = useAuth();
   const [sending, setSending] = useState(false);
+  const [photo, setPhoto] = useState<string | null>(null);
+  useEffect(() => { resolvePhotoUrl(p.photo_url).then(setPhoto); }, [p.photo_url]);
   const age = ageFromDob(p.date_of_birth);
   const color = colorFor(p.id);
   const online = isOnline(p.last_seen);
@@ -34,8 +37,8 @@ export function ProfileCard({ p }: { p: DbProfile }) {
   return (
     <div className="royal-card overflow-hidden group hover:shadow-[var(--shadow-royal)] transition-all hover:-translate-y-1">
       <div className={`relative h-44 bg-gradient-to-br ${color} flex items-center justify-center`}>
-        {p.photo_url ? (
-          <img src={p.photo_url} alt={p.full_name} className="absolute inset-0 h-full w-full object-cover" />
+        {photo ? (
+          <img src={photo} alt={p.full_name} className="absolute inset-0 h-full w-full object-cover" />
         ) : (
           <span className="font-display text-6xl text-white/95 drop-shadow font-telugu">{initialsTelugu(p.full_name_telugu ?? p.full_name)}</span>
         )}
