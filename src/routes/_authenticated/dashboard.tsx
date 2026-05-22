@@ -1,7 +1,6 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Eye, Heart, Send, Star, TrendingUp, Bell, Crown, BadgeCheck, ArrowUpRight, Sparkles, Calendar, MessageCircle, Loader2, Check, X } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { ProfileCard } from "@/components/ProfileCard";
@@ -16,7 +15,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function Dashboard() {
   const { user, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
+  
   const qc = useQueryClient();
 
 
