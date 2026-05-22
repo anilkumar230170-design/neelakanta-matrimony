@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/messages/$id")({
+export const Route = createFileRoute("/_authenticated/messages/$id")({
   component: Thread,
 });
 

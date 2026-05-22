@@ -5,7 +5,7 @@ import { MessageCircle, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 
-export const Route = createFileRoute("/messages")({
+export const Route = createFileRoute("/_authenticated/messages")({
   head: () => ({ meta: [{ title: "సందేశాలు — Neelakanta Matrimony" }] }),
   component: Messages,
 });

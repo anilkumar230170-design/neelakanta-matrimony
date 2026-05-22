@@ -7,7 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { ProfileCard } from "@/components/ProfileCard";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/dashboard")({
+export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [{ title: "డాష్‌బోర్డ్ — Neelakanta Matrimony" }],
   }),
