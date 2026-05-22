@@ -70,7 +70,7 @@ function Thread() {
     qc.invalidateQueries({ queryKey: ["thread", user.id, partnerId] });
   };
 
-  if (loading || !user) return <div className="py-24 text-center"><Loader2 className="h-8 w-8 text-gold animate-spin mx-auto" /></div>;
+  if (!user) return <div className="py-24 text-center"><Loader2 className="h-8 w-8 text-gold animate-spin mx-auto" /></div>;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 flex flex-col h-[calc(100vh-8rem)]">
