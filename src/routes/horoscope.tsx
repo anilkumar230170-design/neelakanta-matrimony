@@ -5,6 +5,7 @@ import { Sparkles, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { NAKSHATRAS, NAKSHATRAS_TELUGU, RASIS, RASIS_TELUGU, calculateAshtakoot, calculateSimpleMatch } from "@/lib/horoscope";
+import { PUBLIC_PROFILE_COLS } from "@/lib/constants";
 
 export const Route = createFileRoute("/horoscope")({
   validateSearch: (s: Record<string, unknown>) => ({
@@ -22,12 +23,18 @@ function HoroscopePage() {
   const { data: profA } = useQuery({
     queryKey: ["profile", a || user?.id],
     enabled: !!(a || user?.id),
-    queryFn: async () => (await supabase.from("profiles").select("*").eq("id", a || user!.id).maybeSingle()).data,
+    queryFn: async () => {
+      const targetId = a || user!.id;
+      if (user && targetId === user.id) {
+        return (await supabase.rpc("get_my_profile")).data;
+      }
+      return (await supabase.from("profiles").select(PUBLIC_PROFILE_COLS).eq("id", targetId).maybeSingle()).data;
+    },
   });
   const { data: profB } = useQuery({
     queryKey: ["profile", b],
     enabled: !!b,
-    queryFn: async () => (await supabase.from("profiles").select("*").eq("id", b).maybeSingle()).data,
+    queryFn: async () => (await supabase.from("profiles").select(PUBLIC_PROFILE_COLS).eq("id", b).maybeSingle()).data,
   });
 
   // Manual override

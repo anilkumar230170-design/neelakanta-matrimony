@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
-import { CASTES_TELUGU } from "@/lib/constants";
+import { CASTES_TELUGU, PUBLIC_PROFILE_COLS } from "@/lib/constants";
 import { NAKSHATRAS_TELUGU, RASIS_TELUGU, calculateSimpleMatch, calculateAshtakoot } from "@/lib/horoscope";
 import { ageFromDob, colorFor, heightLabel, initialsTelugu, shortId } from "@/lib/profile-utils";
 import { resolvePhotoUrl } from "@/lib/photo";
@@ -28,17 +28,23 @@ function ProfilePage() {
   const { data: p, isLoading } = useQuery({
     queryKey: ["profile", id],
     queryFn: async () => {
-      const { data, error } = await supabase.from("profiles").select("*").eq("id", id).maybeSingle();
+      // If viewing own profile, fetch full data via secure RPC
+      if (user && user.id === id) {
+        const { data, error } = await supabase.rpc("get_my_profile");
+        if (error) throw error;
+        return data;
+      }
+      const { data, error } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLS).eq("id", id).maybeSingle();
       if (error) throw error;
       return data;
     },
   });
 
   const { data: me } = useQuery({
-    queryKey: ["profile", user?.id],
+    queryKey: ["profile-me", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("*").eq("id", user!.id).maybeSingle();
+      const { data } = await supabase.rpc("get_my_profile");
       return data;
     },
   });
@@ -223,8 +229,9 @@ function ProfilePage() {
 
           <Card title="కుటుంబ వివరాలు" titleEn="Family">
             <div className="grid sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
-              <Detail k="తండ్రి" v={p.father_name ?? "—"} />
-              <Detail k="తల్లి" v={p.mother_name ?? "—"} />
+              <Detail k="తండ్రి" v={(p as any).father_name ?? "—"} />
+              <Detail k="తల్లి" v={(p as any).mother_name ?? "—"} />
+
               <Detail k="సోదరులు/సోదరిలు" v={p.siblings ?? "—"} />
               <Detail k="కుటుంబ విలువలు" v={p.family_status ?? "—"} />
               <Detail k="కుటుంబ రకం" v={p.family_type ?? "—"} />

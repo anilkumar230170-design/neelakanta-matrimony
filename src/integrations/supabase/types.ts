@@ -275,6 +275,58 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_my_profile: {
+        Args: never
+        Returns: {
+          about: string | null
+          annual_income: string | null
+          birth_place: string | null
+          birth_time: string | null
+          caste: string | null
+          city: string | null
+          country: string | null
+          created_at: string
+          date_of_birth: string | null
+          education: string | null
+          email: string | null
+          employed_in: string | null
+          family_status: string | null
+          family_type: string | null
+          father_name: string | null
+          full_name: string
+          full_name_telugu: string | null
+          gender: Database["public"]["Enums"]["gender_t"]
+          gotra: string | null
+          height_cm: number | null
+          id: string
+          last_seen: string | null
+          manglik: boolean | null
+          marital_status: Database["public"]["Enums"]["marital_status_t"] | null
+          mother_name: string | null
+          mother_tongue: string | null
+          nakshatra: string | null
+          nakshatra_pada: number | null
+          partner_preferences: Json | null
+          phone: string | null
+          photo_url: string | null
+          plan: Database["public"]["Enums"]["plan_t"] | null
+          profession: string | null
+          profile_complete: boolean | null
+          rasi: string | null
+          religion: string | null
+          siblings: string | null
+          state: string | null
+          sub_caste: string | null
+          updated_at: string
+          verified: boolean | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       has_accepted_interest: {
         Args: { _a: string; _b: string }
         Returns: boolean

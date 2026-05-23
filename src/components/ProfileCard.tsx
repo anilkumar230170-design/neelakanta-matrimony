@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { resolvePhotoUrl } from "@/lib/photo";
 
-export function ProfileCard({ p }: { p: DbProfile }) {
+export function ProfileCard({ p }: { p: Partial<DbProfile> & Pick<DbProfile, "id"> }) {
   const { user } = useAuth();
   const [sending, setSending] = useState(false);
   const [photo, setPhoto] = useState<string | null>(null);
