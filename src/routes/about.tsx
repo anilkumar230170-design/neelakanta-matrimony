@@ -5,7 +5,7 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "మా గురించి — Neelakanta Matrimony" },
-      { name: "description", content: "Neelakanta Matrimony — trusted Telugu matchmaking since 2018." },
+      { name: "description", content: "Neelakanta Matrimony — trusted Telugu matchmaking since 2026." },
     ],
   }),
   component: About,
