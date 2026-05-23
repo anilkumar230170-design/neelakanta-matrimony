@@ -3,6 +3,7 @@ import { Search, Shield, Heart, Sparkles, Star, Users, CheckCircle2, ArrowRight,
 import { useQuery } from "@tanstack/react-query";
 import heroImg from "@/assets/hero-couple.jpg";
 import mandala from "@/assets/pattern-mandala.jpg";
+import shivaBlessing from "@/assets/shiva-blessing.png";
 import { stats, successStories } from "@/lib/mock-data";
 import { ProfileCard } from "@/components/ProfileCard";
 import { supabase } from "@/integrations/supabase/client";
@@ -95,6 +96,40 @@ function Home() {
           </div>
         </div>
       </section>
+
+      {/* SHIVA BLESSING */}
+      <section className="relative overflow-hidden border-y border-gold/20 bg-gradient-to-b from-secondary/40 via-background to-secondary/40">
+        <img src={mandala} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover opacity-[0.06]" />
+        <div className="relative mx-auto max-w-5xl px-6 py-16 md:py-20 flex flex-col md:flex-row items-center gap-10 md:gap-14">
+          <div className="relative shrink-0">
+            <div className="absolute inset-0 rounded-full bg-gold/20 blur-3xl scale-110" aria-hidden="true" />
+            <img
+              src={shivaBlessing}
+              alt="Lord Shiva blessing"
+              loading="lazy"
+              width={260}
+              height={260}
+              className="relative h-48 w-48 md:h-64 md:w-64 object-contain drop-shadow-[0_8px_24px_rgba(180,120,40,0.25)]"
+            />
+          </div>
+          <div className="text-center md:text-left">
+            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-gold font-semibold">
+              <Sparkles className="h-3.5 w-3.5" /> ఆశీర్వాదం
+            </div>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-primary mt-3 font-telugu leading-tight">
+              ఓం నమః శివాయ
+            </h2>
+            <div className="divider-gold w-24 mx-auto md:mx-0 mt-4" />
+            <p className="mt-5 text-base md:text-lg text-foreground/85 font-telugu leading-relaxed max-w-xl">
+              పరమశివుని ఆశీస్సులతో — ప్రతి జంటకు సుఖ సంతోషాలు, ధర్మబద్ధమైన గృహస్థ జీవితం, శాశ్వత అనుబంధం కలగాలని మా ప్రార్థన.
+            </p>
+            <p className="mt-3 text-sm text-muted-foreground italic">
+              "May Lord Shiva bless every union with harmony, devotion, and eternal love."
+            </p>
+          </div>
+        </div>
+      </section>
+
 
       {/* FEATURES */}
       <section className="mx-auto max-w-7xl px-6 py-20">
