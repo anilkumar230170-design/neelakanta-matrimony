@@ -54,6 +54,7 @@ export function Footer() {
       <div className="border-t border-primary-foreground/10">
         <div className="mx-auto max-w-7xl px-6 py-5 text-xs text-primary-foreground/60 flex flex-wrap justify-between gap-2">
           <span>© 2026 Neelakanta Matrimony. All rights reserved.</span>
+          <span>Owned and developed by Anilkumar Kadavergu</span>
           <span className="font-telugu">ప్రేమతో తయారు చేయబడింది · Made in India</span>
         </div>
       </div>
