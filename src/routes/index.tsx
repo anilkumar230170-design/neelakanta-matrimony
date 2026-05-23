@@ -82,7 +82,7 @@ function Home() {
               </Field>
               <div className="grid grid-cols-2 gap-3">
                 <Field label="వయస్సు"><select className="input-royal"><option>22 - 28</option><option>25 - 32</option><option>28 - 35</option></select></Field>
-                <Field label="మతం"><select className="input-royal"><option>హిందూ</option><option>క్రిస్టియన్</option><option>ముస్లిం</option></select></Field>
+                <Field label="మతం"><select className="input-royal"><option>హిందూ</option></select></Field>
               </div>
               <Field label="కులం">
                 <select className="input-royal"><option>ఏదైనా</option><option>కమ్మ</option><option>రెడ్డి</option><option>బ్రాహ్మణ</option><option>కాపు</option><option>రాజు</option><option>యాదవ</option></select>
