@@ -5,6 +5,7 @@ import { Sparkles, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { NAKSHATRAS, NAKSHATRAS_TELUGU, RASIS, RASIS_TELUGU, calculateAshtakoot, calculateSimpleMatch } from "@/lib/horoscope";
+import { PUBLIC_PROFILE_COLS } from "@/lib/constants";
 
 export const Route = createFileRoute("/horoscope")({
   validateSearch: (s: Record<string, unknown>) => ({

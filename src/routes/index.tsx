@@ -6,6 +6,7 @@ import mandala from "@/assets/pattern-mandala.jpg";
 import { stats, successStories } from "@/lib/mock-data";
 import { ProfileCard } from "@/components/ProfileCard";
 import { supabase } from "@/integrations/supabase/client";
+import { PUBLIC_PROFILE_COLS } from "@/lib/constants";
 
 export const Route = createFileRoute("/")({
   head: () => ({

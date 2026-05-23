@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { ProfileCard } from "@/components/ProfileCard";
 import { toast } from "sonner";
+import { PUBLIC_PROFILE_COLS } from "@/lib/constants";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
