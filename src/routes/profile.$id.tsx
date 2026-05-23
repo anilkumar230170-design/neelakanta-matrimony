@@ -229,8 +229,9 @@ function ProfilePage() {
 
           <Card title="కుటుంబ వివరాలు" titleEn="Family">
             <div className="grid sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
-              <Detail k="తండ్రి" v={p.father_name ?? "—"} />
-              <Detail k="తల్లి" v={p.mother_name ?? "—"} />
+              <Detail k="తండ్రి" v={(p as any).father_name ?? "—"} />
+              <Detail k="తల్లి" v={(p as any).mother_name ?? "—"} />
+
               <Detail k="సోదరులు/సోదరిలు" v={p.siblings ?? "—"} />
               <Detail k="కుటుంబ విలువలు" v={p.family_status ?? "—"} />
               <Detail k="కుటుంబ రకం" v={p.family_type ?? "—"} />
