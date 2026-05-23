@@ -46,10 +46,10 @@ export const profiles: Profile[] = [
 ];
 
 export const stats = {
-  totalProfiles: "12,48,392",
-  verified: "8,92,103",
-  successStories: "1,52,847",
-  newToday: "2,341",
+  totalProfiles: "0",
+  verified: "0",
+  successStories: "0",
+  newToday: "0",
 };
 
 export const successStories = [
