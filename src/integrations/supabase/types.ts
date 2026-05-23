@@ -272,32 +272,42 @@ export type Database = {
       }
     }
     Views: {
-      public_profiles: {
-        Row: {
+      [_ in never]: never
+    }
+    Functions: {
+      get_my_profile: {
+        Args: never
+        Returns: {
           about: string | null
           annual_income: string | null
           birth_place: string | null
+          birth_time: string | null
           caste: string | null
           city: string | null
           country: string | null
-          created_at: string | null
+          created_at: string
           date_of_birth: string | null
           education: string | null
+          email: string | null
           employed_in: string | null
           family_status: string | null
           family_type: string | null
-          full_name: string | null
+          father_name: string | null
+          full_name: string
           full_name_telugu: string | null
-          gender: Database["public"]["Enums"]["gender_t"] | null
+          gender: Database["public"]["Enums"]["gender_t"]
           gotra: string | null
           height_cm: number | null
-          id: string | null
+          id: string
           last_seen: string | null
           manglik: boolean | null
           marital_status: Database["public"]["Enums"]["marital_status_t"] | null
+          mother_name: string | null
           mother_tongue: string | null
           nakshatra: string | null
           nakshatra_pada: number | null
+          partner_preferences: Json | null
+          phone: string | null
           photo_url: string | null
           plan: Database["public"]["Enums"]["plan_t"] | null
           profession: string | null
@@ -307,91 +317,16 @@ export type Database = {
           siblings: string | null
           state: string | null
           sub_caste: string | null
-          updated_at: string | null
+          updated_at: string
           verified: boolean | null
         }
-        Insert: {
-          about?: string | null
-          annual_income?: string | null
-          birth_place?: string | null
-          caste?: string | null
-          city?: string | null
-          country?: string | null
-          created_at?: string | null
-          date_of_birth?: string | null
-          education?: string | null
-          employed_in?: string | null
-          family_status?: string | null
-          family_type?: string | null
-          full_name?: string | null
-          full_name_telugu?: string | null
-          gender?: Database["public"]["Enums"]["gender_t"] | null
-          gotra?: string | null
-          height_cm?: number | null
-          id?: string | null
-          last_seen?: string | null
-          manglik?: boolean | null
-          marital_status?:
-            | Database["public"]["Enums"]["marital_status_t"]
-            | null
-          mother_tongue?: string | null
-          nakshatra?: string | null
-          nakshatra_pada?: number | null
-          photo_url?: string | null
-          plan?: Database["public"]["Enums"]["plan_t"] | null
-          profession?: string | null
-          profile_complete?: boolean | null
-          rasi?: string | null
-          religion?: string | null
-          siblings?: string | null
-          state?: string | null
-          sub_caste?: string | null
-          updated_at?: string | null
-          verified?: boolean | null
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
         }
-        Update: {
-          about?: string | null
-          annual_income?: string | null
-          birth_place?: string | null
-          caste?: string | null
-          city?: string | null
-          country?: string | null
-          created_at?: string | null
-          date_of_birth?: string | null
-          education?: string | null
-          employed_in?: string | null
-          family_status?: string | null
-          family_type?: string | null
-          full_name?: string | null
-          full_name_telugu?: string | null
-          gender?: Database["public"]["Enums"]["gender_t"] | null
-          gotra?: string | null
-          height_cm?: number | null
-          id?: string | null
-          last_seen?: string | null
-          manglik?: boolean | null
-          marital_status?:
-            | Database["public"]["Enums"]["marital_status_t"]
-            | null
-          mother_tongue?: string | null
-          nakshatra?: string | null
-          nakshatra_pada?: number | null
-          photo_url?: string | null
-          plan?: Database["public"]["Enums"]["plan_t"] | null
-          profession?: string | null
-          profile_complete?: boolean | null
-          rasi?: string | null
-          religion?: string | null
-          siblings?: string | null
-          state?: string | null
-          sub_caste?: string | null
-          updated_at?: string | null
-          verified?: boolean | null
-        }
-        Relationships: []
       }
-    }
-    Functions: {
       has_accepted_interest: {
         Args: { _a: string; _b: string }
         Returns: boolean
