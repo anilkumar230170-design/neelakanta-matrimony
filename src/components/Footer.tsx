@@ -41,7 +41,7 @@ export function Footer() {
         <div>
           <h4 className="font-semibold mb-3 text-gold font-telugu">సంప్రదించండి</h4>
           <ul className="space-y-2 text-sm text-primary-foreground/80">
-            <li className="flex items-center gap-2"><Phone className="h-4 w-4" /><span>+91 98765 43210</span></li>
+            <li className="flex items-center gap-2"><Phone className="h-4 w-4" /><span>+91 8805865828</span></li>
             <li className="flex items-center gap-2"><Mail className="h-4 w-4" /><span>care@neelakanta.com</span></li>
           </ul>
           <div className="flex gap-3 mt-4">
