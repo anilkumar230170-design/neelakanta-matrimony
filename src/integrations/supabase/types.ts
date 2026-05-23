@@ -272,7 +272,124 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_profiles: {
+        Row: {
+          about: string | null
+          annual_income: string | null
+          birth_place: string | null
+          caste: string | null
+          city: string | null
+          country: string | null
+          created_at: string | null
+          date_of_birth: string | null
+          education: string | null
+          employed_in: string | null
+          family_status: string | null
+          family_type: string | null
+          full_name: string | null
+          full_name_telugu: string | null
+          gender: Database["public"]["Enums"]["gender_t"] | null
+          gotra: string | null
+          height_cm: number | null
+          id: string | null
+          last_seen: string | null
+          manglik: boolean | null
+          marital_status: Database["public"]["Enums"]["marital_status_t"] | null
+          mother_tongue: string | null
+          nakshatra: string | null
+          nakshatra_pada: number | null
+          photo_url: string | null
+          plan: Database["public"]["Enums"]["plan_t"] | null
+          profession: string | null
+          profile_complete: boolean | null
+          rasi: string | null
+          religion: string | null
+          siblings: string | null
+          state: string | null
+          sub_caste: string | null
+          updated_at: string | null
+          verified: boolean | null
+        }
+        Insert: {
+          about?: string | null
+          annual_income?: string | null
+          birth_place?: string | null
+          caste?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          education?: string | null
+          employed_in?: string | null
+          family_status?: string | null
+          family_type?: string | null
+          full_name?: string | null
+          full_name_telugu?: string | null
+          gender?: Database["public"]["Enums"]["gender_t"] | null
+          gotra?: string | null
+          height_cm?: number | null
+          id?: string | null
+          last_seen?: string | null
+          manglik?: boolean | null
+          marital_status?:
+            | Database["public"]["Enums"]["marital_status_t"]
+            | null
+          mother_tongue?: string | null
+          nakshatra?: string | null
+          nakshatra_pada?: number | null
+          photo_url?: string | null
+          plan?: Database["public"]["Enums"]["plan_t"] | null
+          profession?: string | null
+          profile_complete?: boolean | null
+          rasi?: string | null
+          religion?: string | null
+          siblings?: string | null
+          state?: string | null
+          sub_caste?: string | null
+          updated_at?: string | null
+          verified?: boolean | null
+        }
+        Update: {
+          about?: string | null
+          annual_income?: string | null
+          birth_place?: string | null
+          caste?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          education?: string | null
+          employed_in?: string | null
+          family_status?: string | null
+          family_type?: string | null
+          full_name?: string | null
+          full_name_telugu?: string | null
+          gender?: Database["public"]["Enums"]["gender_t"] | null
+          gotra?: string | null
+          height_cm?: number | null
+          id?: string | null
+          last_seen?: string | null
+          manglik?: boolean | null
+          marital_status?:
+            | Database["public"]["Enums"]["marital_status_t"]
+            | null
+          mother_tongue?: string | null
+          nakshatra?: string | null
+          nakshatra_pada?: number | null
+          photo_url?: string | null
+          plan?: Database["public"]["Enums"]["plan_t"] | null
+          profession?: string | null
+          profile_complete?: boolean | null
+          rasi?: string | null
+          religion?: string | null
+          siblings?: string | null
+          state?: string | null
+          sub_caste?: string | null
+          updated_at?: string | null
+          verified?: boolean | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_accepted_interest: {
