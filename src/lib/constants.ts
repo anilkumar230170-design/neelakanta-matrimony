@@ -17,3 +17,8 @@ export const HEIGHTS = Array.from({ length: 36 }, (_, i) => {
   const inches = Math.round((cm / 2.54) % 12);
   return { cm, label: `${feet}'${inches}" (${cm} cm)` };
 });
+
+// Columns visible to OTHER authenticated users (no email, phone, family names, partner_preferences)
+export const PUBLIC_PROFILE_COLS =
+  "id, full_name, full_name_telugu, gender, date_of_birth, height_cm, marital_status, religion, caste, sub_caste, gotra, rasi, nakshatra, nakshatra_pada, manglik, mother_tongue, education, profession, annual_income, employed_in, city, state, country, about, photo_url, family_type, family_status, siblings, verified, plan, profile_complete, last_seen, created_at, updated_at, birth_place";
+
