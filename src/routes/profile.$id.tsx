@@ -28,17 +28,23 @@ function ProfilePage() {
   const { data: p, isLoading } = useQuery({
     queryKey: ["profile", id],
     queryFn: async () => {
-      const { data, error } = await supabase.from("profiles").select("*").eq("id", id).maybeSingle();
+      // If viewing own profile, fetch full data via secure RPC
+      if (user && user.id === id) {
+        const { data, error } = await supabase.rpc("get_my_profile");
+        if (error) throw error;
+        return data;
+      }
+      const { data, error } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLS).eq("id", id).maybeSingle();
       if (error) throw error;
       return data;
     },
   });
 
   const { data: me } = useQuery({
-    queryKey: ["profile", user?.id],
+    queryKey: ["profile-me", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("*").eq("id", user!.id).maybeSingle();
+      const { data } = await supabase.rpc("get_my_profile");
       return data;
     },
   });

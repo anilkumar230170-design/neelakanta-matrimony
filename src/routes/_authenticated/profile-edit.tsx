@@ -27,7 +27,7 @@ function ProfileEdit() {
   const { data: profile, isLoading } = useQuery({
     queryKey: ["me-edit", user?.id],
     enabled: !!user,
-    queryFn: async () => (await supabase.from("profiles").select("*").eq("id", user!.id).maybeSingle()).data,
+    queryFn: async () => (await supabase.rpc("get_my_profile")).data,
   });
 
   useEffect(() => {

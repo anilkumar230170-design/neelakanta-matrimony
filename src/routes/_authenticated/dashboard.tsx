@@ -22,7 +22,7 @@ function Dashboard() {
   const { data: me } = useQuery({
     queryKey: ["me", user?.id],
     enabled: !!user,
-    queryFn: async () => (await supabase.from("profiles").select("*").eq("id", user!.id).maybeSingle()).data,
+    queryFn: async () => (await supabase.rpc("get_my_profile")).data,
   });
 
   const { data: stats } = useQuery({
@@ -49,7 +49,7 @@ function Dashboard() {
     enabled: !!user && !!me,
     queryFn: async () => {
       const oppGender = me!.gender === "male" ? "female" : "male";
-      const { data } = await supabase.from("profiles").select("*")
+      const { data } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLS)
         .eq("gender", oppGender).eq("profile_complete", true).neq("id", user!.id)
         .order("last_seen", { ascending: false }).limit(4);
       return data ?? [];

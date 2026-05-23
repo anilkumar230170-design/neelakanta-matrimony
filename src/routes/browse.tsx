@@ -31,7 +31,7 @@ function Browse() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("*")
+        .select(PUBLIC_PROFILE_COLS)
         .eq("profile_complete", true)
         .order("last_seen", { ascending: false })
         .limit(120);

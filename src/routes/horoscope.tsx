@@ -22,12 +22,18 @@ function HoroscopePage() {
   const { data: profA } = useQuery({
     queryKey: ["profile", a || user?.id],
     enabled: !!(a || user?.id),
-    queryFn: async () => (await supabase.from("profiles").select("*").eq("id", a || user!.id).maybeSingle()).data,
+    queryFn: async () => {
+      const targetId = a || user!.id;
+      if (user && targetId === user.id) {
+        return (await supabase.rpc("get_my_profile")).data;
+      }
+      return (await supabase.from("profiles").select(PUBLIC_PROFILE_COLS).eq("id", targetId).maybeSingle()).data;
+    },
   });
   const { data: profB } = useQuery({
     queryKey: ["profile", b],
     enabled: !!b,
-    queryFn: async () => (await supabase.from("profiles").select("*").eq("id", b).maybeSingle()).data,
+    queryFn: async () => (await supabase.from("profiles").select(PUBLIC_PROFILE_COLS).eq("id", b).maybeSingle()).data,
   });
 
   // Manual override

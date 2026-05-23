@@ -21,7 +21,7 @@ function Home() {
   const { data: featured = [] } = useQuery({
     queryKey: ["featured-profiles"],
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("*").eq("profile_complete", true).order("last_seen", { ascending: false }).limit(4);
+      const { data } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLS).eq("profile_complete", true).order("last_seen", { ascending: false }).limit(4);
       return data ?? [];
     },
   });
