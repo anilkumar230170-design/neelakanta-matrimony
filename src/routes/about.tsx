@@ -58,7 +58,7 @@ function About() {
       </div>
 
       <div className="mt-10 grid md:grid-cols-3 gap-5">
-        <ContactItem icon={<Phone className="h-5 w-5" />} label="ఫోన్" value="+91 98765 43210" />
+        <ContactItem icon={<Phone className="h-5 w-5" />} label="ఫోన్" value="+91 8805865828" />
         <ContactItem icon={<Mail className="h-5 w-5" />} label="ఇమెయిల్" value="care@neelakanta.com" />
         <ContactItem icon={<MapPin className="h-5 w-5" />} label="కార్యాలయం" value="హైదరాబాద్, తెలంగాణ" />
       </div>
