@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
-import { CASTES_TELUGU } from "@/lib/constants";
+import { CASTES_TELUGU, PUBLIC_PROFILE_COLS } from "@/lib/constants";
 import { NAKSHATRAS_TELUGU, RASIS_TELUGU, calculateSimpleMatch, calculateAshtakoot } from "@/lib/horoscope";
 import { ageFromDob, colorFor, heightLabel, initialsTelugu, shortId } from "@/lib/profile-utils";
 import { resolvePhotoUrl } from "@/lib/photo";

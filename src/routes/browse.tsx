@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Filter, Search, SlidersHorizontal, Loader2 } from "lucide-react";
 import { ProfileCard } from "@/components/ProfileCard";
 import { supabase } from "@/integrations/supabase/client";
-import { CASTES, CASTES_TELUGU } from "@/lib/constants";
+import { CASTES, CASTES_TELUGU, PUBLIC_PROFILE_COLS } from "@/lib/constants";
 import { NAKSHATRAS, NAKSHATRAS_TELUGU } from "@/lib/horoscope";
 import { ageFromDob } from "@/lib/profile-utils";
 
