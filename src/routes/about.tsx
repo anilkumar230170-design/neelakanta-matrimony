@@ -21,7 +21,7 @@ function About() {
         <h1 className="font-display text-4xl md:text-5xl font-bold text-primary mt-3 font-telugu">నీలకంఠ మ్యాట్రిమొనీ</h1>
         <div className="divider-gold w-32 mx-auto mt-5" />
         <p className="mt-6 text-lg text-foreground/85 max-w-3xl mx-auto leading-relaxed font-telugu">
-          2018 నుండి తెలుగు కుటుంబాలకు సేవ చేస్తున్నాము. మా లక్ష్యం — ప్రతి యువతీ యువకుడికి తగిన జీవిత భాగస్వామిని గౌరవంగా, నమ్మదగిన విధానంలో కనుగొనడం.
+          2026 నుండి తెలుగు కుటుంబాలకు సేవ చేస్తున్నాము. మా లక్ష్యం — ప్రతి యువతీ యువకుడికి తగిన జీవిత భాగస్వామిని గౌరవంగా, నమ్మదగిన విధానంలో కనుగొనడం.
         </p>
       </div>
 
