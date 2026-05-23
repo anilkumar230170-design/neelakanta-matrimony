@@ -27,10 +27,10 @@ function About() {
 
       <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {[
-          { icon: Users, k: "12L+", v: "ప్రొఫైల్స్" },
-          { icon: Shield, k: "100%", v: "వెరిఫైడ్" },
-          { icon: Heart, k: "1.5L+", v: "విజయగాథలు" },
-          { icon: Award, k: "8+", v: "సంవత్సరాల అనుభవం" },
+          { icon: Users, k: "0", v: "ప్రొఫైల్స్" },
+          { icon: Shield, k: "0", v: "వెరిఫైడ్" },
+          { icon: Heart, k: "0", v: "విజయగాథలు" },
+          { icon: Award, k: "0", v: "సంవత్సరాల అనుభవం" },
         ].map((s) => (
           <div key={s.v} className="royal-card p-6 text-center">
             <s.icon className="h-8 w-8 text-gold mx-auto" />
