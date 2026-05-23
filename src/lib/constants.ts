@@ -3,7 +3,7 @@ export const CASTES_TELUGU: Record<string, string> = {
   Kamma: "కమ్మ", Reddy: "రెడ్డి", Brahmin: "బ్రాహ్మణ", Kapu: "కాపు", Raju: "రాజు",
   Yadav: "యాదవ", Velama: "వెలమ", Naidu: "నాయుడు", Vysya: "వైశ్య", Other: "ఇతర",
 };
-export const RELIGIONS = ["Hindu", "Christian", "Muslim", "Sikh", "Other"];
+export const RELIGIONS = ["Hindu"];
 export const MARITAL = [
   { v: "never_married", l: "ఎప్పుడూ వివాహం కాలేదు" },
   { v: "divorced", l: "విడాకులు" },
