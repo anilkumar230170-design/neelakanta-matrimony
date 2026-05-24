@@ -21,7 +21,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { data: featured = [] } = useQuery({
     queryKey: ["featured-profiles"],
     queryFn: async () => {
@@ -43,8 +43,9 @@ function Home() {
               <Sparkles className="h-3.5 w-3.5" /> {t("భారతదేశంలో నం.1 తెలుగు మ్యాట్రిమొనీ", "India's #1 Telugu Matrimony")}
             </div>
             <h1 className="font-display text-4xl md:text-6xl font-bold leading-tight">
-              {t(
-                <>మీ <span className="text-gold">జీవిత భాగస్వామిని</span><br />గౌరవంగా కనుగొనండి</>,
+              {lang === "te" ? (
+                <>మీ <span className="text-gold">జీవిత భాగస్వామిని</span><br />గౌరవంగా కనుగొనండి</>
+              ) : (
                 <>Find your <span className="text-gold">life partner</span><br />with dignity</>
               )}
             </h1>
