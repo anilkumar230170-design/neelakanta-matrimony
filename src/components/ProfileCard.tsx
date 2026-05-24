@@ -8,8 +8,10 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { resolvePhotoUrl } from "@/lib/photo";
+import { useLang } from "@/lib/i18n";
 
 export function ProfileCard({ p }: { p: Partial<DbProfile> & Pick<DbProfile, "id"> }) {
+  const { t, lang } = useLang();
   const { user } = useAuth();
   const [sending, setSending] = useState(false);
   const [photo, setPhoto] = useState<string | null>(null);
@@ -18,20 +20,20 @@ export function ProfileCard({ p }: { p: Partial<DbProfile> & Pick<DbProfile, "id
   const color = colorFor(p.id);
   const online = isOnline(p.last_seen);
   const premium = p.plan && p.plan !== "free";
-  const casteTe = p.caste ? (CASTES_TELUGU[p.caste] ?? p.caste) : "—";
+  const casteLabel = p.caste ? (lang === "te" ? (CASTES_TELUGU[p.caste] ?? p.caste) : p.caste) : "—";
 
   const sendInterest = async () => {
-    if (!user) { toast.error("ముందుగా లాగిన్ అవ్వండి"); return; }
+    if (!user) { toast.error(t("ముందుగా లాగిన్ అవ్వండి", "Please log in first")); return; }
     if (user.id === p.id) return;
     setSending(true);
     const { error } = await supabase.from("interests").insert({ sender_id: user.id, receiver_id: p.id });
     setSending(false);
     if (error) {
-      if (error.code === "23505") toast.info("ఆసక్తి ఇప్పటికే పంపబడింది");
+      if (error.code === "23505") toast.info(t("ఆసక్తి ఇప్పటికే పంపబడింది", "Interest already sent"));
       else toast.error(error.message);
       return;
     }
-    toast.success("ఆసక్తి పంపబడింది ❤");
+    toast.success(t("ఆసక్తి పంపబడింది ❤", "Interest sent ❤"));
   };
 
   return (
@@ -40,7 +42,7 @@ export function ProfileCard({ p }: { p: Partial<DbProfile> & Pick<DbProfile, "id
         {photo ? (
           <img src={photo} alt={p.full_name} className="absolute inset-0 h-full w-full object-cover" />
         ) : (
-          <span className="font-display text-6xl text-white/95 drop-shadow font-telugu">{initialsTelugu(p.full_name_telugu ?? p.full_name)}</span>
+          <span className="font-display text-6xl text-white/95 drop-shadow">{initialsTelugu(p.full_name_telugu ?? p.full_name)}</span>
         )}
         {premium && (
           <div className="absolute top-3 left-3 flex items-center gap-1 bg-gold text-gold-foreground px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide z-10">
@@ -61,16 +63,16 @@ export function ProfileCard({ p }: { p: Partial<DbProfile> & Pick<DbProfile, "id
       <div className="p-5">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <h3 className="font-display text-lg font-bold text-foreground leading-tight font-telugu truncate">{p.full_name_telugu ?? p.full_name}</h3>
-            <p className="text-xs text-muted-foreground truncate">{p.full_name}</p>
+            <h3 className="font-display text-lg font-bold text-foreground leading-tight truncate">{lang === "te" ? (p.full_name_telugu ?? p.full_name) : (p.full_name ?? p.full_name_telugu)}</h3>
+            <p className="text-xs text-muted-foreground truncate">{lang === "te" ? p.full_name : p.full_name_telugu}</p>
           </div>
           {p.verified && <BadgeCheck className="h-5 w-5 text-primary flex-shrink-0" />}
         </div>
 
         <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs text-foreground/80">
-          <div>{age ? `${age} yrs` : "—"}, {heightLabel(p.height_cm).split(" ")[0]}</div>
-          <div className="text-right text-primary font-medium font-telugu">{casteTe}</div>
-          <div className="flex items-center gap-1 col-span-2 font-telugu"><MapPin className="h-3 w-3 text-gold" /> {p.city ?? "—"}{p.state ? `, ${p.state}` : ""}</div>
+          <div>{age ? `${age} ${t("సం.", "yrs")}` : "—"}, {heightLabel(p.height_cm).split(" ")[0]}</div>
+          <div className="text-right text-primary font-medium">{casteLabel}</div>
+          <div className="flex items-center gap-1 col-span-2"><MapPin className="h-3 w-3 text-gold" /> {p.city ?? "—"}{p.state ? `, ${p.state}` : ""}</div>
           <div className="flex items-center gap-1 col-span-2 truncate"><GraduationCap className="h-3 w-3 text-gold flex-shrink-0" /> <span className="truncate">{p.education ?? "—"}</span></div>
           <div className="flex items-center gap-1 col-span-2 truncate"><Briefcase className="h-3 w-3 text-gold flex-shrink-0" /> <span className="truncate">{p.profession ?? "—"}</span></div>
         </div>
@@ -81,12 +83,12 @@ export function ProfileCard({ p }: { p: Partial<DbProfile> & Pick<DbProfile, "id
           <Link
             to="/profile/$id"
             params={{ id: p.id }}
-            className="flex-1 text-center px-3 py-2 rounded-full border border-primary text-primary text-xs font-semibold hover:bg-primary hover:text-primary-foreground transition-colors font-telugu"
+            className="flex-1 text-center px-3 py-2 rounded-full border border-primary text-primary text-xs font-semibold hover:bg-primary hover:text-primary-foreground transition-colors"
           >
-            ప్రొఫైల్ చూడండి
+            {t("ప్రొఫైల్ చూడండి", "View Profile")}
           </Link>
-          <button onClick={sendInterest} disabled={sending} className="btn-royal px-3 py-2 rounded-full text-xs font-semibold flex items-center gap-1 font-telugu disabled:opacity-60">
-            <Heart className="h-3.5 w-3.5" /> ఆసక్తి
+          <button onClick={sendInterest} disabled={sending} className="btn-royal px-3 py-2 rounded-full text-xs font-semibold flex items-center gap-1 disabled:opacity-60">
+            <Heart className="h-3.5 w-3.5" /> {t("ఆసక్తి", "Interest")}
           </button>
         </div>
       </div>
