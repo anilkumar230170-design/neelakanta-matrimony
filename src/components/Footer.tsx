@@ -6,7 +6,7 @@ export function Footer() {
   const { t } = useLang();
   return (
     <footer className="mt-24 border-t border-border/60 bg-primary text-primary-foreground">
-      <div className="mx-auto max-w-7xl px-6 py-14 grid gap-10 md:grid-cols-4">
+      <div className="mx-auto max-w-7xl px-6 py-14 grid gap-10 md:grid-cols-3">
         <div>
           <div className="flex items-center gap-3 mb-3">
             <div className="h-10 w-10 rounded-full bg-gold flex items-center justify-center">
@@ -32,16 +32,6 @@ export function Footer() {
           </ul>
         </div>
 
-        <div>
-          <h4 className="font-semibold mb-3 text-gold">{t("కులాలు", "Castes")}</h4>
-          <ul className="space-y-2 text-sm text-primary-foreground/80">
-            <li>{t("కమ్మ మ్యాట్రిమొనీ", "Kamma Matrimony")}</li>
-            <li>{t("రెడ్డి మ్యాట్రిమొనీ", "Reddy Matrimony")}</li>
-            <li>{t("బ్రాహ్మణ మ్యాట్రిమొనీ", "Brahmin Matrimony")}</li>
-            <li>{t("కాపు మ్యాట్రిమొనీ", "Kapu Matrimony")}</li>
-            <li>{t("రాజు, యాదవ, ఇతర", "Raju, Yadav & others")}</li>
-          </ul>
-        </div>
 
         <div>
           <h4 className="font-semibold mb-3 text-gold">{t("సంప్రదించండి", "Contact")}</h4>
