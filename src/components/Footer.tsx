@@ -6,7 +6,7 @@ export function Footer() {
   const { t } = useLang();
   return (
     <footer className="mt-24 border-t border-border/60 bg-primary text-primary-foreground">
-      <div className="mx-auto max-w-7xl px-6 py-14 grid gap-10 md:grid-cols-4">
+      <div className="mx-auto max-w-7xl px-6 py-14 grid gap-10 md:grid-cols-3">
         <div>
           <div className="flex items-center gap-3 mb-3">
             <div className="h-10 w-10 rounded-full bg-gold flex items-center justify-center">
