@@ -32,16 +32,6 @@ export function Footer() {
           </ul>
         </div>
 
-        <div>
-          <h4 className="font-semibold mb-3 text-gold">{t("కులాలు", "Castes")}</h4>
-          <ul className="space-y-2 text-sm text-primary-foreground/80">
-            <li>{t("కమ్మ మ్యాట్రిమొనీ", "Kamma Matrimony")}</li>
-            <li>{t("రెడ్డి మ్యాట్రిమొనీ", "Reddy Matrimony")}</li>
-            <li>{t("బ్రాహ్మణ మ్యాట్రిమొనీ", "Brahmin Matrimony")}</li>
-            <li>{t("కాపు మ్యాట్రిమొనీ", "Kapu Matrimony")}</li>
-            <li>{t("రాజు, యాదవ, ఇతర", "Raju, Yadav & others")}</li>
-          </ul>
-        </div>
 
         <div>
           <h4 className="font-semibold mb-3 text-gold">{t("సంప్రదించండి", "Contact")}</h4>
