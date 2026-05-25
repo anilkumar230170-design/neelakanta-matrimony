@@ -95,7 +95,7 @@ function Home() {
                 <Field label={t("మతం", "Religion")}><select className="input-royal"><option>{t("హిందూ", "Hindu")}</option></select></Field>
               </div>
               <Field label={t("కులం", "Caste")}>
-                <select className="input-royal"><option>{t("ఏదైనా", "Any")}</option><option>{t("కమ్మ", "Kamma")}</option><option>{t("రెడ్డి", "Reddy")}</option><option>{t("బ్రాహ్మణ", "Brahmin")}</option><option>{t("కాపు", "Kapu")}</option><option>{t("రాజు", "Raju")}</option><option>{t("యాదవ", "Yadav")}</option></select>
+                <select className="input-royal"><option>{t("నీలకంఠ", "Neelakanta")}</option></select>
               </Field>
               <Link to="/browse" className="btn-royal w-full flex items-center justify-center gap-2 py-3.5 rounded-full font-semibold">
                 <Search className="h-4 w-4" /> {t("మ్యాచ్ కనుగొనండి", "Find Match")}
