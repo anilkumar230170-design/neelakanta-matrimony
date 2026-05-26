@@ -63,6 +63,54 @@ function About() {
         </div>
       </div>
 
+      <div className="mt-14 royal-card p-8 md:p-10">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-full bg-gold/15 flex items-center justify-center">
+            <History className="h-5 w-5 text-gold" />
+          </div>
+          <h2 className="font-display text-2xl font-bold text-primary">{t("మా చరిత్ర", "Our History")}</h2>
+        </div>
+        <div className="divider-gold w-20 mt-2 mb-6" />
+        <div className="grid md:grid-cols-2 gap-8 items-center">
+          <div className="space-y-4 text-foreground/85 leading-relaxed text-[15px]">
+            {t(
+              <>
+                <p>
+                  1997లో స్థాపించబడిన 'శ్రీ నీలకంఠి సంఘం హైదరాబాద్', మరింత అనుబంధం మరియు ఉత్తేజం కలిగిన సమాజాన్ని
+                  నిర్మించాలనే ఒక గొప్ప సంకల్పంతో కొద్దిమంది వ్యక్తుల కలయికగా ప్రారంభమైంది. కేవలం 15 మంది సభ్యులతో
+                  మొదలైన మా ప్రయాణం, నేడు 130కి పైగా క్రియాశీల కుటుంబాలతో ఒక వర్ధిల్లుతున్న సంస్థగా ఎదిగింది.
+                </p>
+                <p>
+                  గడిచిన సంవత్సరాలలో, మేము ఎన్నో కార్యక్రమాలను నిర్వహించాము, సామాజిక సేవా కార్యక్రమాలను చేపట్టాము
+                  మరియు మన సమాజ పునాదిని బలోపేతం చేసే శాశ్వత సంబంధాలను నిర్మించాము. మా ఈ ప్రయాణం సామూహిక కృషి యొక్క
+                  శక్తికి మరియు సమాజం పట్ల మనకున్న నిరంతర నిబద్ధతకు నిదర్శనం.
+                </p>
+              </>,
+              <>
+                <p>
+                  Founded in 1997, Shri Neelakanthi Sangham Hyderabad began as a small gathering of few individuals
+                  who shared a vision of creating a more connected and vibrant community. What started with just 15
+                  members has grown into a thriving organization of over 130 active families.
+                </p>
+                <p>
+                  Over the years, we've organized many events, started community initiatives, and built lasting
+                  relationships that strengthen the fabric of our community. Our journey reflects the power of
+                  collective action and the enduring spirit of community.
+                </p>
+              </>
+            )}
+          </div>
+          <div className="relative">
+            <img
+              src={ourHistoryImg}
+              alt={t("శ్రీ నీలకంఠి సంఘం చరిత్ర", "Shri Neelakanthi Sangham history")}
+              className="w-full rounded-2xl shadow-lg border border-gold/20"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </div>
+
       <div className="mt-10 grid md:grid-cols-3 gap-5">
         <ContactItem icon={<Phone className="h-5 w-5" />} label={t("ఫోన్", "Phone")} value="+91 8805865828" />
         <ContactItem icon={<Mail className="h-5 w-5" />} label={t("ఇమెయిల్", "Email")} value="care@neelakanta.com" />
