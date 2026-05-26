@@ -14,7 +14,7 @@ export const Route = createFileRoute("/about")({
 });
 
 function About() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   return (
     <div className="mx-auto max-w-5xl px-6 py-14">
       <div className="text-center">
