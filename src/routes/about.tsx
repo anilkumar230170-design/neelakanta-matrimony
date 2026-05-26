@@ -73,7 +73,7 @@ function About() {
         <div className="divider-gold w-20 mt-2 mb-6" />
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div className="space-y-4 text-foreground/85 leading-relaxed text-[15px]">
-            {t(
+            {lang === "te" ? (
               <>
                 <p>
                   1997లో స్థాపించబడిన 'శ్రీ నీలకంఠి సంఘం హైదరాబాద్', మరింత అనుబంధం మరియు ఉత్తేజం కలిగిన సమాజాన్ని
@@ -85,7 +85,8 @@ function About() {
                   మరియు మన సమాజ పునాదిని బలోపేతం చేసే శాశ్వత సంబంధాలను నిర్మించాము. మా ఈ ప్రయాణం సామూహిక కృషి యొక్క
                   శక్తికి మరియు సమాజం పట్ల మనకున్న నిరంతర నిబద్ధతకు నిదర్శనం.
                 </p>
-              </>,
+              </>
+            ) : (
               <>
                 <p>
                   Founded in 1997, Shri Neelakanthi Sangham Hyderabad began as a small gathering of few individuals
