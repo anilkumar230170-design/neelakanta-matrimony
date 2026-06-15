@@ -21,6 +21,46 @@ async function sha256Hex(input: string) {
     .join("");
 }
 
+type TwilioIncomingNumber = {
+  phone_number?: string;
+  capabilities?: { sms?: boolean };
+};
+
+function isE164Phone(value: string | undefined) {
+  return !!value && /^\+[1-9]\d{6,14}$/.test(value.trim());
+}
+
+async function resolveTwilioSender(params: {
+  lovableKey: string;
+  twilioKey: string;
+  configuredFrom: string | undefined;
+}) {
+  const configuredFrom = params.configuredFrom?.trim();
+  const res = await fetch(`${GATEWAY_URL}/IncomingPhoneNumbers.json?PageSize=20`, {
+    headers: {
+      Authorization: `Bearer ${params.lovableKey}`,
+      "X-Connection-Api-Key": params.twilioKey,
+    },
+  });
+
+  if (!res.ok) {
+    const errBody = await res.text();
+    console.error("Twilio number lookup failed", res.status, errBody);
+    if (isE164Phone(configuredFrom)) return configuredFrom;
+    throw new Error("SMS sender not configured");
+  }
+
+  const payload = (await res.json()) as { incoming_phone_numbers?: TwilioIncomingNumber[] };
+  const smsNumbers = (payload.incoming_phone_numbers ?? [])
+    .filter((number) => number.capabilities?.sms && isE164Phone(number.phone_number))
+    .map((number) => number.phone_number!.trim());
+
+  if (configuredFrom && smsNumbers.includes(configuredFrom)) return configuredFrom;
+  const fallback = smsNumbers[0];
+  if (!fallback) throw new Error("No SMS-capable Twilio sender found");
+  return fallback;
+}
+
 export const sendPhoneOtp = createServerFn({ method: "POST" })
   .inputValidator((input: { phone: string }) =>
     z.object({ phone: phoneSchema }).parse(input),
@@ -50,10 +90,14 @@ export const sendPhoneOtp = createServerFn({ method: "POST" })
 
     const lovableKey = process.env.LOVABLE_API_KEY;
     const twilioKey = process.env.TWILIO_API_KEY;
-    const from = process.env.TWILIO_FROM_NUMBER;
-    if (!lovableKey || !twilioKey || !from) {
+    if (!lovableKey || !twilioKey) {
       throw new Error("SMS provider not configured");
     }
+    const from = await resolveTwilioSender({
+      lovableKey,
+      twilioKey,
+      configuredFrom: process.env.TWILIO_FROM_NUMBER,
+    });
 
     const body = new URLSearchParams({
       To: data.phone,
