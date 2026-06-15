@@ -67,11 +67,10 @@ function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      const { email: synthEmail, tokenHash } = await verifyOtpFn({
+      const { tokenHash } = await verifyOtpFn({
         data: { phone: normalizePhone(phone), code: otp },
       });
       const { error } = await supabase.auth.verifyOtp({
-        email: synthEmail,
         token_hash: tokenHash,
         type: "magiclink",
       });
