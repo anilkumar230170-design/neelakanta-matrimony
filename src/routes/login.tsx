@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { Heart, Mail, Lock, Phone } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,6 +7,7 @@ import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import { useLang } from "@/lib/i18n";
+import { sendPhoneOtp, verifyPhoneOtp } from "@/lib/phone-otp.functions";
 
 export const Route = createFileRoute("/login")({
   validateSearch: (s: Record<string, unknown>) => ({ redirect: (s.redirect as string) || "/dashboard" }),
@@ -19,6 +21,8 @@ function Login() {
   const go = (to: string) => navigate({ to });
   const { redirect } = Route.useSearch();
   const { user } = useAuth();
+  const sendOtpFn = useServerFn(sendPhoneOtp);
+  const verifyOtpFn = useServerFn(verifyPhoneOtp);
   const [mode, setMode] = useState<"email" | "phone">("email");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -48,21 +52,37 @@ function Login() {
     e.preventDefault();
     if (!phone) { toast.error(t("ఫోన్ నంబర్ నమోదు చేయండి", "Enter phone number")); return; }
     setLoading(true);
-    const { error } = await supabase.auth.signInWithOtp({ phone: normalizePhone(phone) });
-    setLoading(false);
-    if (error) { toast.error(error.message); return; }
-    setOtpSent(true);
-    toast.success(t("OTP పంపబడింది", "OTP sent"));
+    try {
+      await sendOtpFn({ data: { phone: normalizePhone(phone) } });
+      setOtpSent(true);
+      toast.success(t("OTP పంపబడింది", "OTP sent"));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to send OTP");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.verifyOtp({ phone: normalizePhone(phone), token: otp, type: "sms" });
-    setLoading(false);
-    if (error) { toast.error(error.message); return; }
-    toast.success(t("స్వాగతం!", "Welcome!"));
-    go(redirect);
+    try {
+      const { email: synthEmail, tokenHash } = await verifyOtpFn({
+        data: { phone: normalizePhone(phone), code: otp },
+      });
+      const { error } = await supabase.auth.verifyOtp({
+        email: synthEmail,
+        token_hash: tokenHash,
+        type: "magiclink",
+      });
+      if (error) throw error;
+      toast.success(t("స్వాగతం!", "Welcome!"));
+      go(redirect);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Verification failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogle = async () => {
