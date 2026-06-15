@@ -26,7 +26,7 @@ type TwilioIncomingNumber = {
   capabilities?: { sms?: boolean };
 };
 
-function isE164Phone(value: string | undefined) {
+function isE164Phone(value: string | undefined): value is string {
   return !!value && /^\+[1-9]\d{6,14}$/.test(value.trim());
 }
 
