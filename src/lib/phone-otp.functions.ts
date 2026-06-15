@@ -145,13 +145,19 @@ export const verifyPhoneOtp = createServerFn({ method: "POST" })
       throw new Error("No OTP found. Please request a new code.");
     }
     const row = rows[0];
-    if (row.consumed_at) throw new Error("Code already used. Request a new one.");
+    const incoming = await sha256Hex(data.code);
+    const consumedRecently =
+      !!row.consumed_at &&
+      Date.now() - new Date(row.consumed_at).getTime() < 2 * 60 * 1000;
+
+    if (row.consumed_at && !(consumedRecently && incoming === row.code_hash)) {
+      throw new Error("Code already used. Request a new one.");
+    }
     if (new Date(row.expires_at).getTime() < Date.now()) {
       throw new Error("Code expired. Request a new one.");
     }
     if (row.attempts >= 5) throw new Error("Too many attempts. Request a new code.");
 
-    const incoming = await sha256Hex(data.code);
     if (incoming !== row.code_hash) {
       await supabaseAdmin
         .from("phone_otps")
@@ -160,10 +166,12 @@ export const verifyPhoneOtp = createServerFn({ method: "POST" })
       throw new Error("Invalid code");
     }
 
-    await supabaseAdmin
-      .from("phone_otps")
-      .update({ consumed_at: new Date().toISOString() })
-      .eq("id", row.id);
+    if (!row.consumed_at) {
+      await supabaseAdmin
+        .from("phone_otps")
+        .update({ consumed_at: new Date().toISOString() })
+        .eq("id", row.id);
+    }
 
     // Find or create the auth user keyed by a synthetic email.
     const email = syntheticEmail(data.phone);
