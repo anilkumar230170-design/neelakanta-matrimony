@@ -8,6 +8,7 @@ import { stats, successStories } from "@/lib/mock-data";
 import { ProfileCard } from "@/components/ProfileCard";
 import { supabase } from "@/integrations/supabase/client";
 import { PUBLIC_PROFILE_COLS } from "@/lib/constants";
+import type { DbProfile } from "@/lib/profile-utils";
 import { useLang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/")({

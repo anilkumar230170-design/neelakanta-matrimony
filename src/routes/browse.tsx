@@ -6,7 +6,7 @@ import { ProfileCard } from "@/components/ProfileCard";
 import { supabase } from "@/integrations/supabase/client";
 import { CASTES, CASTES_TELUGU, PUBLIC_PROFILE_COLS } from "@/lib/constants";
 import { NAKSHATRAS, NAKSHATRAS_TELUGU } from "@/lib/horoscope";
-import { ageFromDob } from "@/lib/profile-utils";
+import { ageFromDob, type DbProfile } from "@/lib/profile-utils";
 import { useLang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/browse")({

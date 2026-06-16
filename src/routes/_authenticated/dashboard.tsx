@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { ProfileCard } from "@/components/ProfileCard";
 import { toast } from "sonner";
 import { PUBLIC_PROFILE_COLS } from "@/lib/constants";
+import type { DbProfile } from "@/lib/profile-utils";
 import { useLang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -53,7 +54,7 @@ function Dashboard() {
       const { data } = await supabase.from("profiles_public").select(PUBLIC_PROFILE_COLS)
         .eq("gender", oppGender).eq("profile_complete", true).neq("id", user!.id)
         .order("last_seen", { ascending: false }).limit(4);
-      return data ?? [];
+      return (data ?? []) as unknown as DbProfile[];
     },
   });
 
