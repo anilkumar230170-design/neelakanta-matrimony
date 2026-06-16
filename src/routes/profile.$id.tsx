@@ -7,7 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { CASTES_TELUGU, PUBLIC_PROFILE_COLS } from "@/lib/constants";
 import { NAKSHATRAS_TELUGU, RASIS_TELUGU, calculateSimpleMatch, calculateAshtakoot } from "@/lib/horoscope";
-import { ageFromDob, colorFor, heightLabel, initialsTelugu, shortId } from "@/lib/profile-utils";
+import { ageFromDob, colorFor, heightLabel, initialsTelugu, shortId, type DbProfile } from "@/lib/profile-utils";
 import { resolvePhotoUrl } from "@/lib/photo";
 import { useLang } from "@/lib/i18n";
 
@@ -35,9 +35,9 @@ function ProfilePage() {
         if (error) throw error;
         return data;
       }
-      const { data, error } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLS).eq("id", id).maybeSingle();
+      const { data, error } = await supabase.from("profiles_public").select(PUBLIC_PROFILE_COLS).eq("id", id).maybeSingle();
       if (error) throw error;
-      return data;
+      return data as unknown as DbProfile | null;
     },
   });
 

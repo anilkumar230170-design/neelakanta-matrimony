@@ -8,6 +8,7 @@ import { stats, successStories } from "@/lib/mock-data";
 import { ProfileCard } from "@/components/ProfileCard";
 import { supabase } from "@/integrations/supabase/client";
 import { PUBLIC_PROFILE_COLS } from "@/lib/constants";
+import type { DbProfile } from "@/lib/profile-utils";
 import { useLang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/")({
@@ -25,8 +26,8 @@ function Home() {
   const { data: featured = [] } = useQuery({
     queryKey: ["featured-profiles"],
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLS).eq("profile_complete", true).order("last_seen", { ascending: false }).limit(4);
-      return data ?? [];
+      const { data } = await supabase.from("profiles_public").select(PUBLIC_PROFILE_COLS).eq("profile_complete", true).order("last_seen", { ascending: false }).limit(4);
+      return (data ?? []) as unknown as DbProfile[];
     },
   });
   return (
