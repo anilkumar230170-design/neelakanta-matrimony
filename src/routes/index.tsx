@@ -26,7 +26,7 @@ function Home() {
     queryKey: ["featured-profiles"],
     queryFn: async () => {
       const { data } = await supabase.from("profiles_public").select(PUBLIC_PROFILE_COLS).eq("profile_complete", true).order("last_seen", { ascending: false }).limit(4);
-      return data ?? [];
+      return (data ?? []) as unknown as DbProfile[];
     },
   });
   return (

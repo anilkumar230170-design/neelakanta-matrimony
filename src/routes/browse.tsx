@@ -38,7 +38,7 @@ function Browse() {
         .order("last_seen", { ascending: false })
         .limit(120);
       if (error) throw error;
-      return data ?? [];
+      return (data ?? []) as unknown as DbProfile[];
     },
   });
 
