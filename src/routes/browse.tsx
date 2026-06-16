@@ -32,7 +32,7 @@ function Browse() {
     queryKey: ["profiles", "browse"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("profiles")
+        .from("profiles_public")
         .select(PUBLIC_PROFILE_COLS)
         .eq("profile_complete", true)
         .order("last_seen", { ascending: false })
