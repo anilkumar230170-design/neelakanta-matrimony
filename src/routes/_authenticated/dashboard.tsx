@@ -50,7 +50,7 @@ function Dashboard() {
     enabled: !!user && !!me,
     queryFn: async () => {
       const oppGender = me!.gender === "male" ? "female" : "male";
-      const { data } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLS)
+      const { data } = await supabase.from("profiles_public").select(PUBLIC_PROFILE_COLS)
         .eq("gender", oppGender).eq("profile_complete", true).neq("id", user!.id)
         .order("last_seen", { ascending: false }).limit(4);
       return data ?? [];

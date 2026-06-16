@@ -30,13 +30,13 @@ function HoroscopePage() {
       if (user && targetId === user.id) {
         return (await supabase.rpc("get_my_profile")).data;
       }
-      return (await supabase.from("profiles").select(PUBLIC_PROFILE_COLS).eq("id", targetId).maybeSingle()).data;
+      return (await supabase.from("profiles_public").select(PUBLIC_PROFILE_COLS).eq("id", targetId).maybeSingle()).data;
     },
   });
   const { data: profB } = useQuery({
     queryKey: ["profile", b],
     enabled: !!b,
-    queryFn: async () => (await supabase.from("profiles").select(PUBLIC_PROFILE_COLS).eq("id", b).maybeSingle()).data,
+    queryFn: async () => (await supabase.from("profiles_public").select(PUBLIC_PROFILE_COLS).eq("id", b).maybeSingle()).data,
   });
 
   const [boyRasi, setBoyRasi] = useState("Mesha");

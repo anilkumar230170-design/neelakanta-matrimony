@@ -35,7 +35,7 @@ function ProfilePage() {
         if (error) throw error;
         return data;
       }
-      const { data, error } = await supabase.from("profiles").select(PUBLIC_PROFILE_COLS).eq("id", id).maybeSingle();
+      const { data, error } = await supabase.from("profiles_public").select(PUBLIC_PROFILE_COLS).eq("id", id).maybeSingle();
       if (error) throw error;
       return data;
     },
